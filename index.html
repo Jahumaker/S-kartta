@@ -321,7 +321,7 @@ function httpGet(url, callback) {
 
 /* Fetch data */
 function fetchData(done) {
-  httpGet('data.json', function(err, text) {
+  httpGet('data.json?t=' + Date.now(), function(err, text) {
     if (err) { done(false); return; }
     try {
       var data = JSON.parse(text);
