@@ -8,13 +8,13 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { width:100vw; height:100vh; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; background:#101520; color:#e0e6ed; }
-#app { width:100vw; height:100vh; display:flex; flex-direction:column; }
+#app { width:100vw; height:100vh; }
 
 /* Header */
 #header {
   height:80px; background:linear-gradient(135deg,#1a237e 0%,#0d47a1 50%,#01579b 100%);
   display:flex; align-items:center; justify-content:space-between;
-  padding:0 30px; flex-shrink:0;
+  padding:0 30px;
   border-bottom:3px solid #4fc3f7;
   box-shadow:0 4px 20px #0008;
 }
@@ -23,8 +23,8 @@ html, body { width:100vw; height:100vh; overflow:hidden; font-family:'Segoe UI',
 .clock { font-size:38px; font-weight:300; color:#4fc3f7; font-variant-numeric:tabular-nums; }
 .date { font-size:14px; color:#ffffffaa; margin-top:1px; }
 
-/* Map sections — 3 equal maps filling available space */
-.map-section { position:relative; flex:1 1 0; min-height:0; overflow:hidden; }
+/* Map sections — 3 equal maps, fixed calc heights: (100vh - 80px header - 60px summary) / 3 */
+.map-section { position:relative; width:100vw; height:calc((100vh - 140px) / 3); overflow:hidden; }
 #map-fc-temp { border-top:2px solid #1a237e; }
 #map-fc-rain { border-top:2px solid #1a237e; }
 .map-div { width:100%; height:100%; }
@@ -260,7 +260,7 @@ function shortName(name) {
 
 /* Map defaults */
 var mapOpts = {
-  center: [64.8, 26], zoom: 5,
+  center: [64.5, 26], zoom: 6,
   zoomControl: false, attributionControl: false,
   dragging: false, scrollWheelZoom: false,
   doubleClickZoom: false, touchZoom: false, keyboard: false
@@ -270,20 +270,21 @@ var geoStyle = { color:'#4fc3f7', weight:2, opacity:0.7, fillColor:'#1a237e', fi
 
 /* Init maps */
 function initMaps() {
-  /* Main observation map with tiles */
+  /* Main observation map */
   map1 = L.map('map1', mapOpts);
-  map1.setView([64.5, 26], 5);
+  map1.setView([64.5, 26], 6);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map1);
   L.geoJSON(FINLAND_GEOJSON, { style: geoStyle }).addTo(map1);
   obsLayerGroup = L.layerGroup().addTo(map1);
 
-  /* Forecast temp map — dark background, no tiles */
+  /* Forecast temp map */
   map2 = L.map('map2', mapOpts);
-  map2.setView([64.5, 26], 5);
+  map2.setView([64.5, 26], 6);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map2);
   L.geoJSON(FINLAND_GEOJSON, { style: { color:'#4fc3f7', weight:2, opacity:0.6, fillColor:'#0d1b2a', fillOpacity:0.6, dashArray:'6 3' } }).addTo(map2);
   fcTempGroup = L.layerGroup().addTo(map2);
 
-  /* Forecast rain map — dark background, no tiles */
+  /* Forecast rain map */
   map3 = L.map('map3', mapOpts);
   map3.setView([64.5, 26], 6);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map3);
@@ -291,16 +292,16 @@ function initMaps() {
   fcRainGroup = L.layerGroup().addTo(map3);
 
   /* Force Leaflet to recalculate sizes after layout settles */
-  setTimeout(function() {
+  function resizeMaps() {
     map1.invalidateSize();
     map2.invalidateSize();
     map3.invalidateSize();
-  }, 500);
-  setTimeout(function() {
-    map1.invalidateSize();
-    map2.invalidateSize();
-    map3.invalidateSize();
-  }, 2000);
+  }
+  setTimeout(resizeMaps, 100);
+  setTimeout(resizeMaps, 500);
+  setTimeout(resizeMaps, 1000);
+  setTimeout(resizeMaps, 2000);
+  setTimeout(resizeMaps, 5000);
 }
 
 /* HTTP GET */
