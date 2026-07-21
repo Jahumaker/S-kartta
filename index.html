@@ -200,9 +200,51 @@ var forecastData = null;
 function pad2(n) { return n < 10 ? '0' + n : '' + n; }
 
 function getFinnishParts() {
-  /* Use Date.now() with fallback, compute Finnish time from UTC */
-  var utcMs = (typeof Date.now === 'function') ? Date.now() : new Date().getTime();
-  var now = new Date(utcMs);
+  /* Try three methods to get Finnish time */
+  var now = new Date();
+  var hh, mm, ss, dd, mo, yy, wd;
+
+  /* Method 1: Intl.DateTimeFormat (modern browsers) */
+  try {
+    var fmt = new Intl.DateTimeFormat('fi-FI', {
+      timeZone: 'Europe/Helsinki',
+      hour: 'numeric', minute: 'numeric', second: 'numeric',
+      day: 'numeric', month: 'numeric', year: 'numeric',
+      weekday: 'long', hour12: false
+    });
+    var parts = {};
+    fmt.formatToParts(now).forEach(function(p) { parts[p.type] = p.value; });
+    hh = parseInt(parts.hour, 10);
+    mm = parseInt(parts.minute, 10);
+    ss = parseInt(parts.second, 10);
+    dd = parseInt(parts.day, 10);
+    mo = parseInt(parts.month, 10) - 1;
+    yy = parseInt(parts.year, 10);
+    var dayNames = ['sunnuntai','maanantai','tiistai','keskiviikko','torstai','perjantai','lauantai'];
+    wd = dayNames.indexOf(parts.weekday);
+    if (wd < 0) wd = now.getDay();
+    return { hh: hh, mm: mm, ss: ss, dd: dd, mo: mo, yy: yy, wd: wd };
+  } catch(e) {}
+
+  /* Method 2: toLocaleString parse */
+  try {
+    var str = now.toLocaleString('en-US', { timeZone: 'Europe/Helsinki', hour12: false });
+    var datePart = str.split(',')[0].split('/');
+    var timePart = str.split(',')[1].trim().split(':');
+    mo = parseInt(datePart[0], 10) - 1;
+    dd = parseInt(datePart[1], 10);
+    yy = parseInt(datePart[2], 10);
+    hh = parseInt(timePart[0], 10);
+    if (hh === 24) hh = 0;
+    mm = parseInt(timePart[1], 10);
+    ss = parseInt(timePart[2], 10);
+    var fiNow = new Date(yy, mo, dd, hh, mm, ss);
+    wd = fiNow.getDay();
+    return { hh: hh, mm: mm, ss: ss, dd: dd, mo: mo, yy: yy, wd: wd };
+  } catch(e) {}
+
+  /* Method 3: UTC + manual offset (fallback) */
+  var utcMs = now.getTime();
   var y = now.getUTCFullYear();
   var mar31 = new Date(Date.UTC(y, 2, 31));
   var lastSunMar = 31 - mar31.getUTCDay();
