@@ -12,64 +12,73 @@ html, body { width:1080px; height:1920px; overflow:hidden; font-family:'Segoe UI
 
 /* Header */
 #header {
-  height:90px; background:linear-gradient(135deg,#1a237e 0%,#0d47a1 50%,#01579b 100%);
+  height:80px; background:linear-gradient(135deg,#1a237e 0%,#0d47a1 50%,#01579b 100%);
   display:flex; align-items:center; justify-content:space-between;
-  padding:0 36px; flex-shrink:0;
+  padding:0 30px; flex-shrink:0;
   border-bottom:3px solid #4fc3f7;
   box-shadow:0 4px 20px #0008;
 }
-#header h1 { font-size:34px; font-weight:700; color:#fff; letter-spacing:1px; }
+#header h1 { font-size:30px; font-weight:700; color:#fff; letter-spacing:1px; }
 .header-right { text-align:right; }
-.clock { font-size:42px; font-weight:300; color:#4fc3f7; font-variant-numeric:tabular-nums; }
-.date { font-size:16px; color:#ffffffaa; margin-top:2px; }
+.clock { font-size:38px; font-weight:300; color:#4fc3f7; font-variant-numeric:tabular-nums; }
+.date { font-size:14px; color:#ffffffaa; margin-top:1px; }
 
-/* Map */
-#map-section { height:1200px; flex-shrink:0; position:relative; }
-#map { width:100%; height:100%; }
+/* Map sections — 3 equal maps: (1920 - 80 header - 60 summary) / 3 = 593px */
+.map-section { position:relative; flex-shrink:0; }
+#map-obs { height:593px; }
+#map-fc-temp { height:593px; border-top:2px solid #1a237e; }
+#map-fc-rain { height:594px; border-top:2px solid #1a237e; }
+.map-div { width:100%; height:100%; }
+
+.section-title {
+  position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:1000;
+  background:#1a237eee; border:1px solid #4fc3f7; border-radius:8px;
+  padding:6px 20px; font-size:18px; font-weight:700; color:#fff;
+  letter-spacing:1px; text-transform:uppercase; white-space:nowrap;
+}
 
 .map-legend {
-  position:absolute; bottom:16px; left:16px; z-index:1000;
-  background:#101520ee; border:1px solid #2a323c; border-radius:12px;
-  padding:14px 18px; font-size:15px; backdrop-filter:blur(8px);
+  position:absolute; bottom:10px; left:10px; z-index:1000;
+  background:#101520ee; border:1px solid #2a323c; border-radius:10px;
+  padding:10px 14px; font-size:13px; backdrop-filter:blur(8px);
 }
-.legend-title { font-weight:700; margin-bottom:8px; font-size:16px; color:#fff; }
-.legend-row { display:flex; align-items:center; gap:10px; margin-bottom:5px; color:#ccc; }
-.legend-color { width:24px; height:16px; border-radius:4px; }
+.legend-title { font-weight:700; margin-bottom:6px; font-size:14px; color:#fff; }
+.legend-row { display:flex; align-items:center; gap:8px; margin-bottom:3px; color:#ccc; }
+.legend-color { width:20px; height:14px; border-radius:3px; }
 
 .status-overlay {
-  position:absolute; top:16px; right:16px; z-index:1000;
+  position:absolute; top:10px; right:10px; z-index:1000;
   background:#101520dd; border:1px solid #2a323c; border-radius:8px;
-  padding:8px 16px; font-size:14px; color:#a6adbb; backdrop-filter:blur(8px);
+  padding:6px 14px; font-size:13px; color:#a6adbb; backdrop-filter:blur(8px);
 }
 .fmi-credit {
-  position:absolute; bottom:16px; right:16px; z-index:1000;
+  position:absolute; bottom:10px; right:10px; z-index:1000;
   background:#101520dd; border:1px solid #2a323c; border-radius:8px;
-  padding:6px 14px; font-size:12px; color:#a6adbb88;
+  padding:4px 12px; font-size:11px; color:#a6adbb88;
 }
 
-/* Info panel */
-#info-panel {
-  flex:1; display:flex; flex-direction:column;
-  background:linear-gradient(180deg,#101520,#0c1018);
-  border-top:3px solid #1a237e;
-  min-height:0;
+/* Rain legend */
+.rain-legend {
+  position:absolute; bottom:10px; left:10px; z-index:1000;
+  background:#101520ee; border:1px solid #2a323c; border-radius:10px;
+  padding:10px 14px; font-size:13px; backdrop-filter:blur(8px);
 }
 
-/* Summary */
+/* Summary strip */
 #summary-strip {
-  display:flex; height:160px; flex-shrink:0;
-  border-bottom:2px solid #1a2030;
+  display:flex; height:60px; flex-shrink:0;
+  background:linear-gradient(135deg,#1a237e 0%,#0d47a1 100%);
+  border-top:2px solid #4fc3f7;
 }
 .summary-box {
-  flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  border-right:1px solid #1a2030; padding:16px 8px;
+  flex:1; display:flex; align-items:center; justify-content:center;
+  border-right:1px solid #ffffff22; gap:8px;
 }
 .summary-box:last-child { border-right:none; }
-.summary-icon { font-size:28px; margin-bottom:4px; }
-.summary-value { font-size:46px; font-weight:800; line-height:1.1; }
-.summary-label { font-size:15px; color:#a6adbbaa; margin-top:6px; text-transform:uppercase; letter-spacing:2px; font-weight:600; }
-.summary-detail { font-size:14px; color:#a6adbb77; margin-top:3px; }
+.summary-icon { font-size:20px; }
+.summary-value { font-size:22px; font-weight:800; }
+.summary-label { font-size:11px; color:#ffffffaa; text-transform:uppercase; letter-spacing:1px; }
+.summary-detail { font-size:11px; color:#ffffff77; }
 
 /* Station markers */
 .station-marker {
@@ -80,8 +89,22 @@ html, body { width:1080px; height:1920px; overflow:hidden; font-family:'Segoe UI
   box-shadow:0 3px 10px #0006;
 }
 .station-label {
-  position:absolute; top:-18px; left:50%; transform:translateX(-50%);
-  white-space:nowrap; font-size:11px; font-weight:600;
+  position:absolute; top:-16px; left:50%; transform:translateX(-50%);
+  white-space:nowrap; font-size:10px; font-weight:600;
+  color:#fff; text-shadow:0 1px 4px #000, 0 0 8px #000;
+  pointer-events:none;
+}
+/* Forecast markers */
+.fc-marker {
+  border-radius:50%; border:2px solid #fff4;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; color:#fff;
+  text-shadow:0 1px 4px #000c;
+  box-shadow:0 3px 10px #0006;
+}
+.fc-label {
+  position:absolute; top:-15px; left:50%; transform:translateX(-50%);
+  white-space:nowrap; font-size:10px; font-weight:600;
   color:#fff; text-shadow:0 1px 4px #000, 0 0 8px #000;
   pointer-events:none;
 }
@@ -90,66 +113,76 @@ html, body { width:1080px; height:1920px; overflow:hidden; font-family:'Segoe UI
 .leaflet-popup-content-wrapper { background:#1d232a !important; color:#a6adbb !important; border-radius:10px !important; }
 .leaflet-popup-tip { background:#1d232a !important; }
 
-#error-bar { position:absolute; top:50px; left:50%; transform:translateX(-50%); z-index:1000;
+#error-bar { position:absolute; top:40px; left:50%; transform:translateX(-50%); z-index:1000;
   background:#ef444433; border:1px solid #ef4444; border-radius:8px;
-  padding:10px 20px; font-size:14px; color:#ef4444; display:none; max-width:80%; text-align:center; }
+  padding:8px 16px; font-size:13px; color:#ef4444; display:none; max-width:80%; text-align:center; }
 #error-bar.visible { display:block; }
 </style>
 </head>
 <body>
 <div id="app">
   <div id="header">
-    <h1>&#x1F1EB;&#x1F1EE; Suomen S&auml;&auml;kartta</h1>
+    <h1>&#x1F1EB;&#x1F1EE; Suomen S&auml;&auml;</h1>
     <div class="header-right">
       <div class="clock" id="clock">--:--</div>
       <div class="date" id="date-display"></div>
-
     </div>
   </div>
 
-  <div id="map-section">
-    <div id="map"></div>
+  <!-- Current observations map -->
+  <div class="map-section" id="map-obs">
+    <div class="map-div" id="map1"></div>
+    <div class="section-title">&#x1F321;&#xFE0F; Havainnot &mdash; Nyt</div>
     <div class="map-legend">
       <div class="legend-title">L&auml;mp&ouml;tila &deg;C</div>
-      <div class="legend-row"><div class="legend-color" style="background:#7c3aed"></div> &lt; -20</div>
-      <div class="legend-row"><div class="legend-color" style="background:#3b82f6"></div> -20 ... -10</div>
-      <div class="legend-row"><div class="legend-color" style="background:#06b6d4"></div> -10 ... 0</div>
-      <div class="legend-row"><div class="legend-color" style="background:#10b981"></div> 0 ... 10</div>
-      <div class="legend-row"><div class="legend-color" style="background:#f59e0b"></div> 10 ... 20</div>
-      <div class="legend-row"><div class="legend-color" style="background:#ef4444"></div> 20 ... 30</div>
+      <div class="legend-row"><div class="legend-color" style="background:#3b82f6"></div> &lt; 0</div>
+      <div class="legend-row"><div class="legend-color" style="background:#10b981"></div> 0 &ndash; 10</div>
+      <div class="legend-row"><div class="legend-color" style="background:#f59e0b"></div> 10 &ndash; 20</div>
+      <div class="legend-row"><div class="legend-color" style="background:#ef4444"></div> 20 &ndash; 30</div>
       <div class="legend-row"><div class="legend-color" style="background:#991b1b"></div> &gt; 30</div>
     </div>
-    <div class="status-overlay" id="status-bar">Ladataan havaintoja...</div>
+    <div class="status-overlay" id="status-bar">Ladataan...</div>
     <div id="error-bar"></div>
-    <div class="fmi-credit">L&auml;hde: Ilmatieteen laitos &ndash; Avoin data</div>
+    <div class="fmi-credit">L&auml;hde: Ilmatieteen laitos</div>
   </div>
 
-  <div id="info-panel">
-    <div id="summary-strip">
-      <div class="summary-box">
-        <div class="summary-icon">&#x2744;&#xFE0F;</div>
-        <div class="summary-value" id="s-min" style="color:#3b82f6">&ndash;</div>
-        <div class="summary-label">Kylmin</div>
-        <div class="summary-detail" id="s-min-loc"></div>
-      </div>
-      <div class="summary-box">
-        <div class="summary-icon">&#x1F321;&#xFE0F;</div>
-        <div class="summary-value" id="s-max" style="color:#ef4444">&ndash;</div>
-        <div class="summary-label">L&auml;mpimin</div>
-        <div class="summary-detail" id="s-max-loc"></div>
-      </div>
-      <div class="summary-box">
-        <div class="summary-icon">&#x1F4CA;</div>
-        <div class="summary-value" id="s-avg" style="color:#f59e0b">&ndash;</div>
-        <div class="summary-label">Keskiarvo</div>
-        <div class="summary-detail" id="s-stations"></div>
-      </div>
-      <div class="summary-box">
-        <div class="summary-icon">&#x1F4A8;</div>
-        <div class="summary-value" id="s-wind" style="color:#06b6d4">&ndash;</div>
-        <div class="summary-label">Max tuuli</div>
-        <div class="summary-detail" id="s-wind-loc"></div>
-      </div>
+  <!-- Temperature forecast map -->
+  <div class="map-section" id="map-fc-temp">
+    <div class="map-div" id="map2"></div>
+    <div class="section-title" id="fc-temp-title">&#x1F525; L&auml;mp&ouml;tilaennuste 24h</div>
+  </div>
+
+  <!-- Precipitation forecast map -->
+  <div class="map-section" id="map-fc-rain">
+    <div class="map-div" id="map3"></div>
+    <div class="section-title" id="fc-rain-title">&#x1F327;&#xFE0F; Sade-ennuste 24h (mm)</div>
+    <div class="rain-legend">
+      <div class="legend-title">Sade mm / 24h</div>
+      <div class="legend-row"><div class="legend-color" style="background:#94a3b8"></div> 0</div>
+      <div class="legend-row"><div class="legend-color" style="background:#38bdf8"></div> 0.1 &ndash; 2</div>
+      <div class="legend-row"><div class="legend-color" style="background:#2563eb"></div> 2 &ndash; 5</div>
+      <div class="legend-row"><div class="legend-color" style="background:#7c3aed"></div> 5 &ndash; 10</div>
+      <div class="legend-row"><div class="legend-color" style="background:#dc2626"></div> &gt; 10</div>
+    </div>
+  </div>
+
+  <!-- Summary strip -->
+  <div id="summary-strip">
+    <div class="summary-box">
+      <div class="summary-icon">&#x2744;&#xFE0F;</div>
+      <div><div class="summary-value" id="s-min" style="color:#3b82f6">&ndash;</div><div class="summary-label">Kylmin</div></div>
+    </div>
+    <div class="summary-box">
+      <div class="summary-icon">&#x1F321;&#xFE0F;</div>
+      <div><div class="summary-value" id="s-max" style="color:#ef4444">&ndash;</div><div class="summary-label">L&auml;mpimin</div></div>
+    </div>
+    <div class="summary-box">
+      <div class="summary-icon">&#x1F4CA;</div>
+      <div><div class="summary-value" id="s-avg" style="color:#f59e0b">&ndash;</div><div class="summary-label">Keskiarvo</div></div>
+    </div>
+    <div class="summary-box">
+      <div class="summary-icon">&#x1F4A8;</div>
+      <div><div class="summary-value" id="s-wind" style="color:#06b6d4">&ndash;</div><div class="summary-label">Max tuuli</div></div>
     </div>
   </div>
 </div>
@@ -158,43 +191,37 @@ html, body { width:1080px; height:1920px; overflow:hidden; font-family:'Segoe UI
 <script>
 /* === ALL ES5 — no const/let, no arrow, no async/await, no template literals, no spread === */
 
-var FINLAND_GEOJSON = {"type":"Feature","geometry":{"type":"MultiPolygon","coordinates":[[[[28.95,69.03],[28.41,68.9],[28.8,68.84],[28.45,68.53],[28.66,68.2],[29.36,68.06],[29.65,67.82],[30.01,67.69],[29.92,67.51],[29.52,67.3],[29.05,66.91],[29.9,66.11],[30.12,65.69],[29.7,65.63],[29.84,65.56],[29.73,65.5],[29.72,65.33],[29.58,65.24],[29.83,65.21],[29.85,65.11],[29.63,65.06],[29.63,64.91],[29.78,64.8],[30.12,64.77],[30.18,64.64],[29.95,64.57],[30.07,64.47],[30.03,64.4],[30.56,64.22],[30.55,64.02],[30.2,63.79],[29.98,63.74],[30.46,63.47],[31.18,63.23],[31.26,63.1],[31.51,62.97],[31.57,62.91],[31.26,62.52],[29.13,61.21],[27.63,60.47],[27.23,60.51],[27.31,60.53],[27.19,60.58],[27.2,60.52],[27.05,60.55],[26.96,60.45],[26.81,60.49],[26.7,60.42],[26.64,60.45],[26.62,60.45],[26.59,60.45],[26.58,60.45],[26.55,60.43],[26.5,60.45],[26.58,60.59],[26.75,60.57],[26.66,60.65],[26.47,60.51],[26.49,60.44],[26.35,60.38],[25.92,60.49],[26.11,60.34],[26.04,60.3],[26.01,60.37],[25.84,60.4],[25.93,60.25],[25.75,60.32],[25.85,60.27],[25.76,60.24],[25.65,60.36],[25.53,60.33],[25.52,60.25],[25.2,60.25],[25.2,60.19],[25.03,60.15],[25.02,60.21],[24.67,60.1],[24.55,60.16],[24.59,60.06],[24.45,59.99],[24.46,60.05],[24.31,60.0],[24.37,60.07],[24.32,60.08],[23.43,59.96],[23.51,60.07],[23.22,59.89],[23.25,59.84],[22.89,59.81],[23.25,59.92],[23.33,60.01],[23.11,59.92],[23.26,60.04],[23.04,60.04],[23.03,60.14],[22.97,60.09],[22.96,60.12],[22.87,60.15],[23.08,60.36],[22.53,60.2],[22.65,60.28],[22.53,60.25],[22.5,60.25],[22.45,60.25],[22.62,60.4],[22.29,60.38],[21.9,60.53],[21.79,60.48],[21.84,60.63],[21.61,60.49],[21.56,60.49],[21.57,60.53],[21.52,60.57],[21.53,60.57],[21.58,60.56],[21.58,60.57],[21.41,60.58],[21.47,60.61],[21.35,60.69],[21.47,60.73],[21.33,60.82],[21.43,60.9],[21.3,61.06],[21.48,61.06],[21.44,61.17],[21.56,61.2],[21.48,61.25],[21.52,61.38],[21.45,61.4],[21.57,61.42],[21.42,61.49],[21.59,61.49],[21.48,61.57],[21.72,61.53],[21.54,61.65],[21.52,61.71],[21.59,61.7],[21.47,61.76],[21.38,61.94],[21.24,61.99],[21.39,62.21],[21.37,62.27],[21.31,62.23],[21.34,62.36],[21.13,62.4],[21.13,62.55],[21.21,62.58],[21.07,62.62],[21.16,62.72],[21.11,62.78],[21.38,62.87],[21.44,63.04],[21.69,63.03],[21.5,63.22],[21.89,63.26],[21.88,63.18],[21.98,63.14],[22.04,63.25],[22.18,63.23],[22.33,63.28],[22.35,63.35],[22.19,63.46],[22.4,63.42],[22.28,63.53],[22.39,63.45],[22.59,63.7],[22.76,63.62],[22.92,63.8],[23.0,63.76],[23.07,63.86],[23.42,63.92],[23.38,64.05],[23.62,64.04],[23.57,64.11],[23.94,64.25],[24.0,64.39],[24.33,64.52],[24.59,64.78],[24.54,64.81],[25.07,64.92],[25.36,64.83],[25.37,64.9],[25.2,64.99],[25.44,64.98],[25.36,65.1],[25.21,65.12],[25.33,65.23],[25.27,65.38],[25.36,65.41],[25.32,65.51],[24.91,65.65],[24.67,65.64],[24.55,65.76],[24.71,65.91],[24.42,65.77],[24.22,65.77],[24.01,66.06],[23.69,66.26],[23.65,66.46],[23.88,66.56],[23.89,66.75],[24.0,66.81],[23.57,67.17],[23.6,67.26],[23.79,67.34],[23.77,67.42],[23.43,67.49],[23.55,67.59],[23.48,67.86],[23.66,67.95],[23.38,68.05],[23.31,68.15],[23.15,68.13],[23.07,68.29],[22.81,68.39],[22.07,68.48],[20.62,69.04],[20.72,69.1],[21.1,69.04],[21.16,69.09],[21.03,69.18],[21.1,69.24],[21.64,69.27],[22.36,68.83],[22.41,68.71],[23.2,68.62],[23.93,68.82],[24.66,68.67],[24.88,68.55],[25.12,68.64],[25.2,68.81],[25.63,68.87],[25.8,68.99],[25.73,69.19],[26.01,69.69],[26.21,69.72],[26.53,69.93],[27.1,69.9],[27.87,70.08],[28.4,69.8],[29.15,69.66],[29.34,69.46],[28.86,69.22],[28.83,69.09],[28.95,69.03]]],[[[22.35,60.08],[22.45,60.01],[22.38,59.99],[22.35,60.08]]],[[[21.5,60.14],[21.57,60.17],[21.65,60.16],[21.61,60.1],[21.5,60.14]]],[[[21.74,60.19],[21.85,60.2],[21.89,60.18],[21.72,60.11],[21.74,60.19]]],[[[21.27,60.19],[21.45,60.19],[21.45,60.18],[21.27,60.19]]],[[[22.06,60.21],[22.01,60.14],[21.95,60.15],[21.94,60.18],[22.06,60.21]]],[[[25.86,60.2],[25.82,60.22],[25.88,60.22],[25.86,60.2]]],[[[22.21,60.2],[22.25,60.24],[22.29,60.25],[22.27,60.2],[22.21,60.2]]],[[[25.68,60.25],[25.59,60.24],[25.56,60.28],[25.68,60.25]]],[[[22.47,60.18],[22.96,60.29],[22.73,60.0],[22.47,60.0],[22.42,60.11],[22.6,60.14],[22.42,60.15],[22.45,60.22],[22.47,60.18]]],[[[22.08,60.27],[22.32,60.3],[22.34,60.27],[22.08,60.27]]],[[[22.48,60.32],[22.31,60.32],[22.4,60.36],[22.48,60.32]]],[[[22.0,60.33],[21.79,60.37],[21.85,60.41],[21.8,60.46],[22.0,60.33]]],[[[21.76,60.51],[21.68,60.46],[21.76,60.53],[21.76,60.51]]],[[[21.32,60.48],[21.25,60.5],[21.23,60.56],[21.28,60.54],[21.32,60.48]]],[[[21.33,60.53],[21.48,60.53],[21.44,60.47],[21.33,60.53]]],[[[21.3,60.57],[21.23,60.59],[21.21,60.62],[21.26,60.65],[21.3,60.57]]],[[[21.26,60.88],[21.2,60.89],[21.3,60.9],[21.27,60.97],[21.37,60.93],[21.26,60.88]]],[[[21.42,63.25],[21.24,63.15],[21.08,63.29],[21.24,63.28],[21.2,63.23],[21.28,63.21],[21.42,63.25]]],[[[21.37,63.35],[21.31,63.31],[21.23,63.33],[21.37,63.35]]],[[[24.99,65.06],[25.06,65.04],[24.82,65.04],[24.72,65.0],[24.83,64.97],[24.75,64.95],[24.56,65.04],[24.99,65.06]]],[[[23.89,59.98],[23.91,59.95],[23.85,59.95],[23.89,59.98]]],[[[22.86,60.06],[22.93,60.07],[22.86,60.01],[22.86,60.06]]],[[[22.92,60.13],[22.95,60.08],[22.85,60.08],[22.92,60.13]]],[[[21.95,60.14],[22.01,60.12],[21.93,60.12],[21.95,60.14]]],[[[22.29,60.15],[22.38,60.2],[22.39,60.2],[22.29,60.15]]],[[[22.01,60.3],[21.98,60.28],[21.97,60.29],[21.98,60.29],[22.0,60.3],[22.01,60.3]]],[[[21.97,60.31],[21.88,60.29],[21.88,60.31],[21.97,60.31]]],[[[22.3,60.37],[22.2,60.34],[22.16,60.35],[22.16,60.36],[22.3,60.37]]],[[[22.21,60.38],[22.11,60.35],[22.1,60.35],[22.14,60.38],[22.21,60.38]]],[[[21.31,60.39],[21.36,60.35],[21.29,60.37],[21.31,60.39]]],[[[26.59,60.45],[26.64,60.43],[26.65,60.43],[26.65,60.42],[26.51,60.4],[26.57,60.42],[26.59,60.45]]],[[[22.01,63.33],[22.05,63.28],[21.97,63.29],[22.01,63.33]]],[[[22.24,63.33],[22.09,63.26],[22.07,63.32],[22.24,63.33]]],[[[21.96,63.33],[22.01,63.39],[22.1,63.38],[22.03,63.37],[21.96,63.33]]],[[[22.81,63.78],[22.76,63.72],[22.68,63.76],[22.74,63.79],[22.81,63.78]]],[[[22.41,59.86],[22.51,59.87],[22.44,59.85],[22.41,59.86]]],[[[21.59,60.27],[21.63,60.25],[21.56,60.23],[21.59,60.27]]],[[[21.22,60.85],[21.25,60.83],[21.19,60.86],[21.22,60.85]]],[[[21.39,61.21],[21.43,61.17],[21.34,61.19],[21.39,61.21]]],[[[21.48,61.64],[21.51,61.62],[21.46,61.63],[21.48,61.64]]],[[[21.21,62.99],[21.15,62.95],[21.13,63.0],[21.21,62.99]]]]},"properties":{"name":"Finland"}};
+var FINLAND_GEOJSON = {"type":"Feature","geometry":{"type":"MultiPolygon","coordinates":[[[[28.95,69.03],[28.41,68.9],[28.8,68.84],[28.45,68.53],[28.66,68.2],[29.36,68.06],[29.65,67.82],[30.01,67.69],[29.92,67.51],[29.52,67.3],[29.05,66.91],[29.9,66.11],[30.12,65.69],[29.7,65.63],[29.84,65.56],[29.73,65.5],[29.72,65.33],[29.58,65.24],[29.83,65.21],[29.85,65.11],[29.63,65.06],[29.63,64.91],[29.78,64.8],[30.12,64.77],[30.18,64.64],[29.95,64.57],[30.07,64.47],[30.03,64.4],[30.56,64.22],[30.55,64.02],[30.2,63.79],[29.98,63.74],[30.46,63.47],[31.18,63.23],[31.26,63.1],[31.51,62.97],[31.57,62.91],[31.26,62.52],[29.13,61.21],[27.63,60.47],[27.23,60.51],[27.31,60.53],[27.19,60.58],[27.2,60.52],[27.05,60.55],[26.96,60.45],[26.81,60.49],[26.7,60.42],[26.64,60.45],[26.62,60.45],[26.59,60.45],[26.58,60.45],[26.55,60.43],[26.5,60.45],[26.58,60.59],[26.75,60.57],[26.66,60.65],[26.47,60.51],[26.49,60.44],[26.35,60.38],[25.92,60.49],[26.11,60.34],[26.04,60.3],[26.01,60.37],[25.84,60.4],[25.93,60.25],[25.75,60.32],[25.85,60.27],[25.76,60.24],[25.65,60.36],[25.53,60.33],[25.52,60.25],[25.2,60.25],[25.2,60.19],[25.03,60.15],[25.02,60.21],[24.67,60.1],[24.55,60.16],[24.59,60.06],[24.45,59.99],[24.46,60.05],[24.31,60.0],[24.37,60.07],[24.32,60.08],[23.43,59.96],[23.51,60.07],[23.22,59.89],[23.25,59.84],[22.89,59.81],[23.25,59.92],[23.33,60.01],[23.11,59.92],[23.26,60.04],[23.04,60.04],[23.03,60.14],[22.97,60.09],[22.96,60.12],[22.87,60.15],[23.08,60.36],[22.53,60.2],[22.65,60.28],[22.53,60.25],[22.5,60.25],[22.45,60.25],[22.62,60.4],[22.29,60.38],[21.9,60.53],[21.79,60.48],[21.84,60.63],[21.61,60.49],[21.56,60.49],[21.57,60.53],[21.52,60.57],[21.53,60.57],[21.58,60.56],[21.58,60.57],[21.41,60.58],[21.47,60.61],[21.35,60.69],[21.47,60.73],[21.33,60.82],[21.43,60.9],[21.3,61.06],[21.48,61.06],[21.44,61.17],[21.56,61.2],[21.48,61.25],[21.52,61.38],[21.45,61.4],[21.57,61.42],[21.42,61.49],[21.59,61.49],[21.48,61.57],[21.72,61.53],[21.54,61.65],[21.52,61.71],[21.59,61.7],[21.47,61.76],[21.38,62.04],[21.47,62.19],[21.45,62.27],[21.29,62.39],[21.34,62.48],[21.46,62.52],[21.57,62.58],[21.61,62.66],[21.45,62.74],[21.47,62.86],[21.32,63.05],[21.47,63.15],[22.24,63.43],[22.28,63.47],[22.36,63.48],[23.13,63.65],[23.3,63.87],[23.84,64.03],[24.14,64.28],[24.42,64.49],[24.57,64.65],[24.87,64.76],[25.15,64.84],[25.28,64.92],[25.35,65.03],[25.32,65.14],[25.25,65.14],[24.65,65.06],[24.56,65.11],[24.52,65.18],[24.25,65.24],[24.19,65.36],[24.16,65.42],[23.94,65.55],[23.71,65.72],[23.65,65.78],[23.59,65.87],[23.42,65.96],[23.46,66.03],[23.68,66.12],[23.85,66.06],[23.89,66.06],[23.87,66.14],[23.89,66.19],[23.79,66.27],[23.64,66.34],[23.72,66.47],[23.57,66.5],[23.46,66.66],[23.49,66.77],[23.63,66.95],[23.75,66.98],[23.86,67.22],[23.66,67.41],[23.52,67.57],[23.53,67.63],[23.76,67.79],[23.63,67.88],[23.54,67.94],[23.47,68.07],[23.17,68.15],[22.92,68.18],[22.42,68.12],[22.04,68.23],[21.63,68.44],[21.45,68.62],[20.92,68.9],[20.61,69.04],[20.55,69.06],[20.78,69.06],[20.86,69.03],[21.02,69.04],[21.07,68.92],[21.57,69.07],[21.99,68.93],[22.41,68.72],[22.74,68.73],[22.88,68.68],[23.03,68.68],[23.15,68.63],[23.33,68.64],[23.78,68.82],[23.85,68.84],[24.06,68.78],[24.84,68.58],[25.14,68.6],[25.1,68.64],[25.18,68.69],[25.17,68.79],[25.22,68.82],[25.29,68.82],[25.31,68.76],[25.52,68.79],[25.48,68.87],[25.49,68.9],[25.79,68.95],[25.91,69.01],[25.84,69.05],[25.86,69.08],[25.98,69.09],[26.03,69.17],[26.02,69.22],[25.99,69.25],[25.97,69.28],[25.73,69.33],[25.77,69.35],[25.87,69.34],[25.88,69.38],[25.81,69.47],[25.87,69.52],[25.85,69.56],[25.91,69.59],[25.88,69.63],[25.84,69.62],[25.77,69.59],[25.66,69.6],[25.75,69.66],[25.73,69.72],[25.66,69.74],[25.71,69.81],[25.6,69.86],[25.63,69.92],[25.78,69.89],[25.79,69.91],[25.73,69.95],[25.75,69.97],[26.0,69.95],[26.22,69.88],[26.42,69.86],[26.47,69.85],[26.59,69.87],[26.72,69.83],[26.79,69.84],[26.85,69.87],[27.05,69.85],[27.15,69.88],[27.25,69.86],[27.3,69.88],[27.43,69.85],[27.56,69.89],[27.73,69.88],[27.89,69.87],[27.93,69.92],[28.05,69.89],[28.04,69.83],[28.12,69.78],[28.35,69.77],[28.43,69.82],[28.44,69.78],[28.77,69.64],[28.82,69.57],[28.83,69.46],[28.97,69.22],[29.09,69.12],[29.17,69.08],[29.19,69.05],[29.17,69.03],[28.95,69.03]]]]}};
 
-var map, obsLayerGroup;
+var map1, map2, map3, obsLayerGroup, fcTempGroup, fcRainGroup;
 var observationsData = [];
+var forecastData = null;
 
-/* Finnish time — uses Intl timezone for automatic DST */
+/* Finnish time */
 function pad2(n) { return n < 10 ? '0' + n : '' + n; }
 
 function getFinnishParts() {
   var now = new Date();
   var utcMs = now.getTime();
   var y = now.getUTCFullYear();
-  /* Last Sunday of March — DST starts at 01:00 UTC */
   var mar31 = new Date(Date.UTC(y, 2, 31));
   var lastSunMar = 31 - mar31.getUTCDay();
   var dstStart = Date.UTC(y, 2, lastSunMar, 1, 0, 0);
-  /* Last Sunday of October — DST ends at 01:00 UTC */
   var oct31 = new Date(Date.UTC(y, 9, 31));
   var lastSunOct = 31 - oct31.getUTCDay();
   var dstEnd = Date.UTC(y, 9, lastSunOct, 1, 0, 0);
-  /* EEST = UTC+3 in summer, EET = UTC+2 in winter */
   var offset = (utcMs >= dstStart && utcMs < dstEnd) ? 3 : 2;
   var fi = new Date(utcMs + offset * 3600000);
   return {
-    hh: fi.getUTCHours(),
-    mm: fi.getUTCMinutes(),
-    dd: fi.getUTCDate(),
-    mo: fi.getUTCMonth(),
-    yy: fi.getUTCFullYear(),
-    wd: fi.getUTCDay()
+    hh: fi.getUTCHours(), mm: fi.getUTCMinutes(),
+    dd: fi.getUTCDate(), mo: fi.getUTCMonth(),
+    yy: fi.getUTCFullYear(), wd: fi.getUTCDay()
   };
 }
 
 function updateClock() {
   var p = getFinnishParts();
   document.getElementById('clock').textContent = pad2(p.hh) + ':' + pad2(p.mm);
-
   var days = ['sunnuntaina','maanantaina','tiistaina','keskiviikkona','torstaina','perjantaina','lauantaina'];
   var months = ['tammikuuta','helmikuuta','maaliskuuta','huhtikuuta','toukokuuta','kes\u00e4kuuta',
     'hein\u00e4kuuta','elokuuta','syyskuuta','lokakuuta','marraskuuta','joulukuuta'];
@@ -203,7 +230,7 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-/* Temp color */
+/* Colors */
 function tempToColor(t) {
   if (t < -20) return '#7c3aed';
   if (t < -10) return '#3b82f6';
@@ -212,6 +239,14 @@ function tempToColor(t) {
   if (t < 20) return '#f59e0b';
   if (t < 30) return '#ef4444';
   return '#991b1b';
+}
+
+function rainToColor(mm) {
+  if (mm <= 0) return '#94a3b8';
+  if (mm <= 2) return '#38bdf8';
+  if (mm <= 5) return '#2563eb';
+  if (mm <= 10) return '#7c3aed';
+  return '#dc2626';
 }
 
 /* Simplify station name */
@@ -224,55 +259,66 @@ function shortName(name) {
     .split(' ')[0];
 }
 
-/* Init map */
-function initMap() {
-  map = L.map('map', {
-    center: [64.8, 26], zoom: 5.6,
-    zoomControl: false, attributionControl: false,
-    dragging: false, scrollWheelZoom: false,
-    doubleClickZoom: false, touchZoom: false, keyboard: false
-  });
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map);
-  L.geoJSON(FINLAND_GEOJSON, {
-    style: { color:'#4fc3f7', weight:2.5, opacity:0.8, fillColor:'#1a237e', fillOpacity:0.15, dashArray:'8 4' }
-  }).addTo(map);
-  obsLayerGroup = L.layerGroup().addTo(map);
+/* Map defaults */
+var mapOpts = {
+  center: [64.8, 26], zoom: 5,
+  zoomControl: false, attributionControl: false,
+  dragging: false, scrollWheelZoom: false,
+  doubleClickZoom: false, touchZoom: false, keyboard: false
+};
+
+var geoStyle = { color:'#4fc3f7', weight:2, opacity:0.7, fillColor:'#1a237e', fillOpacity:0.15, dashArray:'6 3' };
+
+/* Init maps */
+function initMaps() {
+  /* Main observation map with tiles */
+  map1 = L.map('map1', mapOpts);
+  map1.setView([65.5, 26], 4);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map1);
+  L.geoJSON(FINLAND_GEOJSON, { style: geoStyle }).addTo(map1);
+  obsLayerGroup = L.layerGroup().addTo(map1);
+
+  /* Forecast temp map — dark background, no tiles */
+  map2 = L.map('map2', mapOpts);
+  map2.setView([65.5, 26], 4);
+  L.geoJSON(FINLAND_GEOJSON, { style: { color:'#4fc3f7', weight:2, opacity:0.6, fillColor:'#0d1b2a', fillOpacity:0.6, dashArray:'6 3' } }).addTo(map2);
+  fcTempGroup = L.layerGroup().addTo(map2);
+
+  /* Forecast rain map — dark background, no tiles */
+  map3 = L.map('map3', mapOpts);
+  map3.setView([65.5, 26], 4);
+  L.geoJSON(FINLAND_GEOJSON, { style: { color:'#4fc3f7', weight:2, opacity:0.6, fillColor:'#0d1b2a', fillOpacity:0.6, dashArray:'6 3' } }).addTo(map3);
+  fcRainGroup = L.layerGroup().addTo(map3);
 }
 
-/* HTTP GET via XMLHttpRequest only (maximum compatibility) */
+/* HTTP GET */
 function httpGet(url, callback) {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', url, true);
   xhr.timeout = 20000;
   xhr.onload = function() {
-    if (xhr.status >= 200 && xhr.status < 300) {
-      callback(null, xhr.responseText);
-    } else {
-      callback(new Error('HTTP ' + xhr.status));
-    }
+    if (xhr.status >= 200 && xhr.status < 300) { callback(null, xhr.responseText); }
+    else { callback(new Error('HTTP ' + xhr.status)); }
   };
   xhr.onerror = function() { callback(new Error('Verkkovirhe')); };
   xhr.ontimeout = function() { callback(new Error('Aikakatkaisu')); };
   xhr.send();
 }
 
-/* Fetch observations from pre-generated data.json (same origin) */
-function fetchObservations(done) {
+/* Fetch data */
+function fetchData(done) {
   httpGet('data.json', function(err, text) {
     if (err) { done(false); return; }
     try {
-      var data = (typeof JSON !== 'undefined' && JSON.parse) ? JSON.parse(text) : eval('(' + text + ')');
+      var data = JSON.parse(text);
       observationsData = [];
       var stations = data.stations || [];
       for (var i = 0; i < stations.length; i++) {
-        if (stations[i].temperature != null) {
-          observationsData.push(stations[i]);
-        }
+        if (stations[i].temperature != null) observationsData.push(stations[i]);
       }
+      forecastData = data.forecast || null;
       done(true);
-    } catch(e) {
-      done(false);
-    }
+    } catch(e) { done(false); }
   });
 }
 
@@ -304,8 +350,8 @@ function drawObservations() {
   }
 
   var labelCities = ['Helsinki','Tampere','Turku','Oulu','Jyv\u00e4skyl\u00e4','Kuopio','Rovaniemi',
-    'Vaasa','Joensuu','Lappeenranta','Pori','H\u00e4meenlinna','Kajaani','Sodankyl\u00e4','Utsjoki',
-    'Sein\u00e4joki','Mikkeli','Kokkola','Kemi','Inari','Enonteki\u00f6','Savonlinna','Lahti','Kotka'];
+    'Vaasa','Joensuu','Lappeenranta','Pori','Kajaani','Sodankyl\u00e4','Utsjoki',
+    'Sein\u00e4joki','Mikkeli','Kokkola','Kemi','Inari','Enonteki\u00f6','Lahti','Kotka'];
 
   for (var gkey in grid) {
     if (!grid.hasOwnProperty(gkey)) continue;
@@ -316,22 +362,73 @@ function drawObservations() {
     for (var c = 0; c < labelCities.length; c++) {
       if ((obs2.name || '').indexOf(labelCities[c]) >= 0) { isKey = true; break; }
     }
-    var size = isKey ? 36 : 28;
-    var fontSize = isKey ? '14px' : '11px';
+    var size = isKey ? 34 : 26;
+    var fontSize = isKey ? '13px' : '10px';
 
     var html = '<div style="position:relative">';
     if (isKey && sname) html += '<div class="station-label">' + sname + '</div>';
     html += '<div class="station-marker" style="width:' + size + 'px;height:' + size + 'px;font-size:' + fontSize + ';background:' + color + '">';
     html += Math.round(obs2.temperature) + '\u00b0</div></div>';
 
-    var icon = L.divIcon({
-      className: '',
-      html: html,
-      iconSize: [size, size],
-      iconAnchor: [size / 2, size / 2]
-    });
+    var icon = L.divIcon({ className: '', html: html, iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
     L.marker([obs2.lat, obs2.lon], { icon: icon }).addTo(obsLayerGroup);
   }
+}
+
+/* Draw temperature forecast */
+function drawForecastTemp() {
+  fcTempGroup.clearLayers();
+  if (!forecastData || !forecastData.temperature) return;
+  var temps = forecastData.temperature;
+  for (var i = 0; i < temps.length; i++) {
+    var fc = temps[i];
+    var color = tempToColor(fc.temperature);
+    var size = 38;
+    var html = '<div style="position:relative">';
+    html += '<div class="fc-label">' + fc.name + '</div>';
+    html += '<div class="fc-marker" style="width:' + size + 'px;height:' + size + 'px;font-size:14px;background:' + color + '">';
+    html += Math.round(fc.temperature) + '\u00b0</div></div>';
+    var icon = L.divIcon({ className: '', html: html, iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
+    L.marker([fc.lat, fc.lon], { icon: icon }).addTo(fcTempGroup);
+  }
+}
+
+/* Draw precipitation forecast */
+function drawForecastRain() {
+  fcRainGroup.clearLayers();
+  if (!forecastData || !forecastData.precipitation) return;
+  var rains = forecastData.precipitation;
+  for (var i = 0; i < rains.length; i++) {
+    var fc = rains[i];
+    var color = rainToColor(fc.precipitation);
+    var size = 38;
+    var label = fc.precipitation > 0 ? fc.precipitation.toFixed(1) : '0';
+    var html = '<div style="position:relative">';
+    html += '<div class="fc-label">' + fc.name + '</div>';
+    html += '<div class="fc-marker" style="width:' + size + 'px;height:' + size + 'px;font-size:13px;background:' + color + '">';
+    html += label + '</div></div>';
+    var icon = L.divIcon({ className: '', html: html, iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
+    L.marker([fc.lat, fc.lon], { icon: icon }).addTo(fcRainGroup);
+  }
+}
+
+/* Update forecast titles with time */
+function updateForecastTitles() {
+  if (!forecastData || !forecastData.time) return;
+  var d = new Date(forecastData.time);
+  var utcMs = d.getTime();
+  var y = d.getUTCFullYear();
+  var mar31 = new Date(Date.UTC(y, 2, 31));
+  var lastSunMar = 31 - mar31.getUTCDay();
+  var dstStart = Date.UTC(y, 2, lastSunMar, 1, 0, 0);
+  var oct31 = new Date(Date.UTC(y, 9, 31));
+  var lastSunOct = 31 - oct31.getUTCDay();
+  var dstEnd = Date.UTC(y, 9, lastSunOct, 1, 0, 0);
+  var offset = (utcMs >= dstStart && utcMs < dstEnd) ? 3 : 2;
+  var fi = new Date(utcMs + offset * 3600000);
+  var timeStr = pad2(fi.getUTCDate()) + '.' + pad2(fi.getUTCMonth() + 1) + '. klo ' + pad2(fi.getUTCHours()) + ':' + pad2(fi.getUTCMinutes());
+  document.getElementById('fc-temp-title').innerHTML = '&#x1F525; L\u00e4mp\u00f6tilaennuste \u2014 ' + timeStr;
+  document.getElementById('fc-rain-title').innerHTML = '&#x1F327;&#xFE0F; Sade 24h yhteens\u00e4 (mm)';
 }
 
 /* Summary */
@@ -343,7 +440,6 @@ function renderSummary() {
     if (observationsData[i].windspeedms != null) winds.push(observationsData[i].windspeedms);
   }
   if (!temps.length) return;
-
   var minT = temps[0], maxT = temps[0], sumT = 0;
   for (var t = 0; t < temps.length; t++) {
     if (temps[t] < minT) minT = temps[t];
@@ -352,28 +448,15 @@ function renderSummary() {
   }
   var avgT = sumT / temps.length;
   var maxW = 0;
-  for (var w = 0; w < winds.length; w++) {
-    if (winds[w] > maxW) maxW = winds[w];
-  }
-
-  var coldest = null, warmest = null, windiest = null;
-  for (var s = 0; s < observationsData.length; s++) {
-    if (observationsData[s].temperature === minT && !coldest) coldest = observationsData[s];
-    if (observationsData[s].temperature === maxT && !warmest) warmest = observationsData[s];
-    if (observationsData[s].windspeedms === maxW && !windiest) windiest = observationsData[s];
-  }
+  for (var w = 0; w < winds.length; w++) { if (winds[w] > maxW) maxW = winds[w]; }
 
   document.getElementById('s-min').textContent = minT.toFixed(1) + '\u00b0';
   document.getElementById('s-max').textContent = maxT.toFixed(1) + '\u00b0';
   document.getElementById('s-avg').textContent = avgT.toFixed(1) + '\u00b0';
   document.getElementById('s-wind').textContent = maxW.toFixed(1) + ' m/s';
-  document.getElementById('s-min-loc').textContent = coldest ? shortName(coldest.name) : '';
-  document.getElementById('s-max-loc').textContent = warmest ? shortName(warmest.name) : '';
-  document.getElementById('s-stations').textContent = observationsData.length + ' asemaa';
-  document.getElementById('s-wind-loc').textContent = windiest ? shortName(windiest.name) : '';
 }
 
-/* Show error */
+/* Error */
 function showError(msg) {
   var el = document.getElementById('error-bar');
   el.textContent = msg;
@@ -384,23 +467,19 @@ function showError(msg) {
 /* Refresh */
 function refreshAll() {
   document.getElementById('status-bar').textContent = 'P\u00e4ivitet\u00e4\u00e4n...';
-
-  fetchObservations(function(obsOk) {
-    if (obsOk && observationsData.length > 0) {
+  fetchData(function(ok) {
+    if (ok && observationsData.length > 0) {
       drawObservations();
       renderSummary();
+      drawForecastTemp();
+      drawForecastRain();
+      updateForecastTitles();
     } else {
-      showError('Havaintodatan haku ep\u00e4onnistui');
+      showError('Datan haku ep\u00e4onnistui');
     }
-
     var p = getFinnishParts();
-    var timeStr = pad2(p.hh) + ':' + pad2(p.mm);
-    var statusText = 'P\u00e4ivitetty ' + timeStr;
-    if (obsOk) {
-      statusText += ' | ' + observationsData.length + ' asemaa';
-    } else {
-      statusText += ' | Havainnot: virhe';
-    }
+    var statusText = 'P\u00e4ivitetty ' + pad2(p.hh) + ':' + pad2(p.mm);
+    if (ok) statusText += ' | ' + observationsData.length + ' asemaa';
     document.getElementById('status-bar').textContent = statusText;
   });
 }
@@ -408,15 +487,13 @@ function refreshAll() {
 /* Start */
 function start() {
   try {
-    initMap();
+    initMaps();
+    refreshAll();
+    setInterval(refreshAll, 600000);
   } catch(e) {
-    return;
+    showError('Virhe: ' + e.message);
   }
-  refreshAll();
-  setInterval(refreshAll, 10 * 60 * 1000);
 }
-
-window.onerror = function() { return true; };
 start();
 </script>
 </body>
