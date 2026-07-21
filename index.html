@@ -167,17 +167,27 @@ function pad2(n) { return n < 10 ? '0' + n : '' + n; }
 
 function getFinnishParts() {
   var now = new Date();
-  /* sv-SE locale gives predictable format: "2026-07-21 16:08:00" */
-  var s = now.toLocaleString('sv-SE', {timeZone:'Europe/Helsinki', hour12:false});
-  /* Split on any non-digit to get [yyyy, mm, dd, hh, mm, ss] */
-  var p = s.split(/[^\d]+/);
-  var yy = Number(p[0]);
-  var mo = Number(p[1]) - 1;
-  var dd = Number(p[2]);
-  var hh = Number(p[3]);
-  var mm = Number(p[4]);
-  var wd = new Date(yy, mo, dd).getDay();
-  return {hh:hh, mm:mm, dd:dd, mo:mo, yy:yy, wd:wd};
+  var utcMs = now.getTime();
+  var y = now.getUTCFullYear();
+  /* Last Sunday of March — DST starts at 01:00 UTC */
+  var mar31 = new Date(Date.UTC(y, 2, 31));
+  var lastSunMar = 31 - mar31.getUTCDay();
+  var dstStart = Date.UTC(y, 2, lastSunMar, 1, 0, 0);
+  /* Last Sunday of October — DST ends at 01:00 UTC */
+  var oct31 = new Date(Date.UTC(y, 9, 31));
+  var lastSunOct = 31 - oct31.getUTCDay();
+  var dstEnd = Date.UTC(y, 9, lastSunOct, 1, 0, 0);
+  /* EEST = UTC+3 in summer, EET = UTC+2 in winter */
+  var offset = (utcMs >= dstStart && utcMs < dstEnd) ? 3 : 2;
+  var fi = new Date(utcMs + offset * 3600000);
+  return {
+    hh: fi.getUTCHours(),
+    mm: fi.getUTCMinutes(),
+    dd: fi.getUTCDate(),
+    mo: fi.getUTCMonth(),
+    yy: fi.getUTCFullYear(),
+    wd: fi.getUTCDay()
+  };
 }
 
 function updateClock() {
