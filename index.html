@@ -200,8 +200,9 @@ var forecastData = null;
 function pad2(n) { return n < 10 ? '0' + n : '' + n; }
 
 function getFinnishParts() {
-  var now = new Date();
-  var utcMs = now.getTime();
+  /* Use Date.now() with fallback, compute Finnish time from UTC */
+  var utcMs = (typeof Date.now === 'function') ? Date.now() : new Date().getTime();
+  var now = new Date(utcMs);
   var y = now.getUTCFullYear();
   var mar31 = new Date(Date.UTC(y, 2, 31));
   var lastSunMar = 31 - mar31.getUTCDay();
@@ -212,7 +213,7 @@ function getFinnishParts() {
   var offset = (utcMs >= dstStart && utcMs < dstEnd) ? 3 : 2;
   var fi = new Date(utcMs + offset * 3600000);
   return {
-    hh: fi.getUTCHours(), mm: fi.getUTCMinutes(),
+    hh: fi.getUTCHours(), mm: fi.getUTCMinutes(), ss: fi.getUTCSeconds(),
     dd: fi.getUTCDate(), mo: fi.getUTCMonth(),
     yy: fi.getUTCFullYear(), wd: fi.getUTCDay()
   };
@@ -220,7 +221,7 @@ function getFinnishParts() {
 
 function updateClock() {
   var p = getFinnishParts();
-  document.getElementById('clock').textContent = pad2(p.hh) + ':' + pad2(p.mm);
+  document.getElementById('clock').textContent = pad2(p.hh) + ':' + pad2(p.mm) + ':' + pad2(p.ss);
   var days = ['sunnuntaina','maanantaina','tiistaina','keskiviikkona','torstaina','perjantaina','lauantaina'];
   var months = ['tammikuuta','helmikuuta','maaliskuuta','huhtikuuta','toukokuuta','kes\u00e4kuuta',
     'hein\u00e4kuuta','elokuuta','syyskuuta','lokakuuta','marraskuuta','joulukuuta'];
@@ -281,14 +282,14 @@ function initMaps() {
   map2 = L.map('map2', mapOpts);
   map2.setView([64.5, 26], 6);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map2);
-  L.geoJSON(FINLAND_GEOJSON, { style: { color:'#4fc3f7', weight:2, opacity:0.6, fillColor:'#0d1b2a', fillOpacity:0.6, dashArray:'6 3' } }).addTo(map2);
+  L.geoJSON(FINLAND_GEOJSON, { style: geoStyle }).addTo(map2);
   fcTempGroup = L.layerGroup().addTo(map2);
 
   /* Forecast rain map */
   map3 = L.map('map3', mapOpts);
   map3.setView([64.5, 26], 6);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map3);
-  L.geoJSON(FINLAND_GEOJSON, { style: { color:'#4fc3f7', weight:2, opacity:0.6, fillColor:'#0d1b2a', fillOpacity:0.6, dashArray:'6 3' } }).addTo(map3);
+  L.geoJSON(FINLAND_GEOJSON, { style: geoStyle }).addTo(map3);
   fcRainGroup = L.layerGroup().addTo(map3);
 
   /* Force Leaflet to recalculate sizes after layout settles */
