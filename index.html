@@ -336,56 +336,33 @@ function fetchData(done) {
   });
 }
 
-/* Draw observations */
+/* Draw observations — show ALL stations, no grid filtering */
 function drawObservations() {
   obsLayerGroup.clearLayers();
-  var grid = {};
-  var priority = ['Helsinki','Tampere','Turku','Oulu','Jyv\u00e4skyl\u00e4','Kuopio','Lahti','Rovaniemi',
-    'Vaasa','Joensuu','Lappeenranta','Kouvola','Pori','H\u00e4meenlinna','Kajaani','Sodankyl\u00e4','Utsjoki',
-    'Ivalo','Sein\u00e4joki','Mikkeli','Savonlinna','Kotka','Kokkola','Kemi','Maarianhamina','Inari','Enonteki\u00f6','Muonio'];
-
-  var sorted = observationsData.slice().sort(function(a, b) {
-    var ap = -1, bp = -1;
-    for (var i = 0; i < priority.length; i++) {
-      if (ap < 0 && (a.name || '').indexOf(priority[i]) >= 0) ap = i;
-      if (bp < 0 && (b.name || '').indexOf(priority[i]) >= 0) bp = i;
-    }
-    if (ap >= 0 && bp < 0) return -1;
-    if (bp >= 0 && ap < 0) return 1;
-    if (ap >= 0 && bp >= 0) return ap - bp;
-    return 0;
-  });
-
-  for (var i = 0; i < sorted.length; i++) {
-    var obs = sorted[i];
-    var gk = Math.round(obs.lat * 4) + ',' + Math.round(obs.lon * 2);
-    if (grid[gk]) continue;
-    grid[gk] = obs;
-  }
 
   var labelCities = ['Helsinki','Tampere','Turku','Oulu','Jyv\u00e4skyl\u00e4','Kuopio','Rovaniemi',
     'Vaasa','Joensuu','Lappeenranta','Pori','Kajaani','Sodankyl\u00e4','Utsjoki',
-    'Sein\u00e4joki','Mikkeli','Kokkola','Kemi','Inari','Enonteki\u00f6','Lahti','Kotka'];
+    'Sein\u00e4joki','Mikkeli','Kokkola','Kemi','Inari','Enonteki\u00f6','Lahti','Kotka',
+    'H\u00e4meenlinna','Savonlinna','Kouvola','Maarianhamina','Muonio'];
 
-  for (var gkey in grid) {
-    if (!grid.hasOwnProperty(gkey)) continue;
-    var obs2 = grid[gkey];
-    var color = tempToColor(obs2.temperature);
-    var sname = shortName(obs2.name);
+  for (var i = 0; i < observationsData.length; i++) {
+    var obs = observationsData[i];
+    var color = tempToColor(obs.temperature);
+    var sname = shortName(obs.name);
     var isKey = false;
     for (var c = 0; c < labelCities.length; c++) {
-      if ((obs2.name || '').indexOf(labelCities[c]) >= 0) { isKey = true; break; }
+      if ((obs.name || '').indexOf(labelCities[c]) >= 0) { isKey = true; break; }
     }
-    var size = isKey ? 34 : 26;
-    var fontSize = isKey ? '13px' : '10px';
+    var size = isKey ? 32 : 22;
+    var fontSize = isKey ? '12px' : '9px';
 
     var html = '<div style="position:relative">';
     if (isKey && sname) html += '<div class="station-label">' + sname + '</div>';
     html += '<div class="station-marker" style="width:' + size + 'px;height:' + size + 'px;font-size:' + fontSize + ';background:' + color + '">';
-    html += Math.round(obs2.temperature) + '\u00b0</div></div>';
+    html += Math.round(obs.temperature) + '\u00b0</div></div>';
 
     var icon = L.divIcon({ className: '', html: html, iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
-    L.marker([obs2.lat, obs2.lon], { icon: icon }).addTo(obsLayerGroup);
+    L.marker([obs.lat, obs.lon], { icon: icon }).addTo(obsLayerGroup);
   }
 }
 
