@@ -167,13 +167,16 @@ function pad2(n) { return n < 10 ? '0' + n : '' + n; }
 
 function getFinnishParts() {
   var now = new Date();
-  var hh = Number(new Intl.DateTimeFormat('en', {timeZone:'Europe/Helsinki', hour:'numeric', hour12:false}).format(now));
-  var mm = Number(new Intl.DateTimeFormat('en', {timeZone:'Europe/Helsinki', minute:'numeric'}).format(now));
-  var dd = Number(new Intl.DateTimeFormat('en', {timeZone:'Europe/Helsinki', day:'numeric'}).format(now));
-  var mo = Number(new Intl.DateTimeFormat('en', {timeZone:'Europe/Helsinki', month:'numeric'}).format(now)) - 1;
-  var yy = Number(new Intl.DateTimeFormat('en', {timeZone:'Europe/Helsinki', year:'numeric'}).format(now));
-  var dateStr = new Intl.DateTimeFormat('en-US', {timeZone:'Europe/Helsinki', year:'numeric', month:'2-digit', day:'2-digit'}).format(now);
-  var wd = new Date(dateStr).getDay();
+  /* sv-SE locale gives predictable format: "2026-07-21 16:08:00" */
+  var s = now.toLocaleString('sv-SE', {timeZone:'Europe/Helsinki', hour12:false});
+  /* Split on any non-digit to get [yyyy, mm, dd, hh, mm, ss] */
+  var p = s.split(/[^\d]+/);
+  var yy = Number(p[0]);
+  var mo = Number(p[1]) - 1;
+  var dd = Number(p[2]);
+  var hh = Number(p[3]);
+  var mm = Number(p[4]);
+  var wd = new Date(yy, mo, dd).getDay();
   return {hh:hh, mm:mm, dd:dd, mo:mo, yy:yy, wd:wd};
 }
 
