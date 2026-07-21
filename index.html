@@ -103,7 +103,7 @@ html, body { width:1080px; height:1920px; overflow:hidden; font-family:'Segoe UI
     <div class="header-right">
       <div class="clock" id="clock">--:--</div>
       <div class="date" id="date-display"></div>
-      <div id="debug-info" style="position:fixed;bottom:0;left:0;background:rgba(0,0,0,0.85);color:#0f0;font-family:monospace;font-size:14px;padding:8px 12px;z-index:9999;max-width:100%;white-space:pre-wrap;"></div>
+
     </div>
   </div>
 
@@ -193,14 +193,6 @@ function getFinnishParts() {
 
 function updateClock() {
   var p = getFinnishParts();
-  var now = new Date();
-  var dbg = 'UTC: ' + now.toUTCString() + '\n'
-    + 'getTime: ' + now.getTime() + '\n'
-    + 'UTCHours: ' + now.getUTCHours() + ' UTCMin: ' + now.getUTCMinutes() + '\n'
-    + 'localHours: ' + now.getHours() + ' localMin: ' + now.getMinutes() + '\n'
-    + 'hh=' + p.hh + ' mm=' + p.mm + ' dd=' + p.dd + ' mo=' + p.mo + ' yy=' + p.yy + ' wd=' + p.wd;
-  var dbgEl = document.getElementById('debug-info');
-  if (dbgEl) dbgEl.textContent = dbg;
   document.getElementById('clock').textContent = pad2(p.hh) + ':' + pad2(p.mm);
 
   var days = ['sunnuntaina','maanantaina','tiistaina','keskiviikkona','torstaina','perjantaina','lauantaina'];
