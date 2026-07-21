@@ -2,13 +2,13 @@
 <html lang="fi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=1080, height=1920, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Suomen Sääkartta</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-html, body { width:1080px; height:1920px; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; background:#101520; color:#e0e6ed; }
-#app { width:1080px; height:1920px; display:flex; flex-direction:column; }
+html, body { width:100vw; height:100vh; overflow:hidden; font-family:'Segoe UI',system-ui,sans-serif; background:#101520; color:#e0e6ed; }
+#app { width:100vw; height:100vh; display:flex; flex-direction:column; }
 
 /* Header */
 #header {
@@ -23,11 +23,10 @@ html, body { width:1080px; height:1920px; overflow:hidden; font-family:'Segoe UI
 .clock { font-size:38px; font-weight:300; color:#4fc3f7; font-variant-numeric:tabular-nums; }
 .date { font-size:14px; color:#ffffffaa; margin-top:1px; }
 
-/* Map sections — 3 equal maps: (1920 - 80 header - 60 summary) / 3 = 593px */
-.map-section { position:relative; flex-shrink:0; }
-#map-obs { height:593px; }
-#map-fc-temp { height:593px; border-top:2px solid #1a237e; }
-#map-fc-rain { height:594px; border-top:2px solid #1a237e; }
+/* Map sections — 3 equal maps filling available space */
+.map-section { position:relative; flex:1 1 0; min-height:0; overflow:hidden; }
+#map-fc-temp { border-top:2px solid #1a237e; }
+#map-fc-rain { border-top:2px solid #1a237e; }
 .map-div { width:100%; height:100%; }
 
 .section-title {
@@ -289,6 +288,18 @@ function initMaps() {
   map3.setView([65.5, 26], 4);
   L.geoJSON(FINLAND_GEOJSON, { style: { color:'#4fc3f7', weight:2, opacity:0.6, fillColor:'#0d1b2a', fillOpacity:0.6, dashArray:'6 3' } }).addTo(map3);
   fcRainGroup = L.layerGroup().addTo(map3);
+
+  /* Force Leaflet to recalculate sizes after layout settles */
+  setTimeout(function() {
+    map1.invalidateSize();
+    map2.invalidateSize();
+    map3.invalidateSize();
+  }, 500);
+  setTimeout(function() {
+    map1.invalidateSize();
+    map2.invalidateSize();
+    map3.invalidateSize();
+  }, 2000);
 }
 
 /* HTTP GET */
