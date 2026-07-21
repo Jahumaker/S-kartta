@@ -128,7 +128,27 @@ html, body { width:100vw; height:100vh; overflow:hidden; font-family:'Segoe UI',
     </div>
   </div>
 
-  <!-- Current observations map -->
+  <!-- Temperature forecast map (1st) -->
+  <div class="map-section" id="map-fc-temp">
+    <div class="map-div" id="map2"></div>
+    <div class="section-title" id="fc-temp-title">&#x1F525; L&auml;mp&ouml;tilaennuste 24h</div>
+  </div>
+
+  <!-- Precipitation forecast map (2nd) -->
+  <div class="map-section" id="map-fc-rain">
+    <div class="map-div" id="map3"></div>
+    <div class="section-title" id="fc-rain-title">&#x1F327;&#xFE0F; Sade-ennuste 24h (mm)</div>
+    <div class="rain-legend">
+      <div class="legend-title">Sade mm / 24h</div>
+      <div class="legend-row"><div class="legend-color" style="background:#94a3b8"></div> 0</div>
+      <div class="legend-row"><div class="legend-color" style="background:#38bdf8"></div> 0.1 &ndash; 2</div>
+      <div class="legend-row"><div class="legend-color" style="background:#2563eb"></div> 2 &ndash; 5</div>
+      <div class="legend-row"><div class="legend-color" style="background:#7c3aed"></div> 5 &ndash; 10</div>
+      <div class="legend-row"><div class="legend-color" style="background:#dc2626"></div> &gt; 10</div>
+    </div>
+  </div>
+
+  <!-- Current observations map (3rd, bottom) -->
   <div class="map-section" id="map-obs">
     <div class="map-div" id="map1"></div>
     <div class="section-title">&#x1F321;&#xFE0F; Havainnot &mdash; Nyt</div>
@@ -143,26 +163,6 @@ html, body { width:100vw; height:100vh; overflow:hidden; font-family:'Segoe UI',
     <div class="status-overlay" id="status-bar">Ladataan...</div>
     <div id="error-bar"></div>
     <div class="fmi-credit">L&auml;hde: Ilmatieteen laitos</div>
-  </div>
-
-  <!-- Temperature forecast map -->
-  <div class="map-section" id="map-fc-temp">
-    <div class="map-div" id="map2"></div>
-    <div class="section-title" id="fc-temp-title">&#x1F525; L&auml;mp&ouml;tilaennuste 24h</div>
-  </div>
-
-  <!-- Precipitation forecast map -->
-  <div class="map-section" id="map-fc-rain">
-    <div class="map-div" id="map3"></div>
-    <div class="section-title" id="fc-rain-title">&#x1F327;&#xFE0F; Sade-ennuste 24h (mm)</div>
-    <div class="rain-legend">
-      <div class="legend-title">Sade mm / 24h</div>
-      <div class="legend-row"><div class="legend-color" style="background:#94a3b8"></div> 0</div>
-      <div class="legend-row"><div class="legend-color" style="background:#38bdf8"></div> 0.1 &ndash; 2</div>
-      <div class="legend-row"><div class="legend-color" style="background:#2563eb"></div> 2 &ndash; 5</div>
-      <div class="legend-row"><div class="legend-color" style="background:#7c3aed"></div> 5 &ndash; 10</div>
-      <div class="legend-row"><div class="legend-color" style="background:#dc2626"></div> &gt; 10</div>
-    </div>
   </div>
 
   <!-- Summary strip -->
@@ -267,7 +267,7 @@ var mapOpts = {
   doubleClickZoom: false, touchZoom: false, keyboard: false
 };
 
-var geoStyle = { color:'#4fc3f7', weight:2, opacity:0.7, fillColor:'#1a237e', fillOpacity:0.15, dashArray:'6 3' };
+var geoStyle = { color:'#4fc3f7', weight:2, opacity:0.7, fill:false };
 
 /* Init maps */
 function initMaps() {
@@ -358,7 +358,7 @@ function drawObservations() {
 
   for (var i = 0; i < sorted.length; i++) {
     var obs = sorted[i];
-    var gk = Math.round(obs.lat * 2) + ',' + Math.round(obs.lon);
+    var gk = Math.round(obs.lat * 4) + ',' + Math.round(obs.lon * 2);
     if (grid[gk]) continue;
     grid[gk] = obs;
   }
@@ -442,7 +442,7 @@ function updateForecastTitles() {
   var fi = new Date(utcMs + offset * 3600000);
   var timeStr = pad2(fi.getUTCDate()) + '.' + pad2(fi.getUTCMonth() + 1) + '. klo ' + pad2(fi.getUTCHours()) + ':' + pad2(fi.getUTCMinutes());
   document.getElementById('fc-temp-title').innerHTML = '&#x1F525; L\u00e4mp\u00f6tilaennuste \u2014 ' + timeStr;
-  document.getElementById('fc-rain-title').innerHTML = '&#x1F327;&#xFE0F; Sade 24h yhteens\u00e4 (mm)';
+  document.getElementById('fc-rain-title').innerHTML = '&#x1F327;&#xFE0F; Sade-ennuste 24h yhteens\u00e4 (mm)';
 }
 
 /* Summary */
