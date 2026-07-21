@@ -162,26 +162,29 @@ var FINLAND_GEOJSON = {"type":"Feature","geometry":{"type":"MultiPolygon","coord
 var map, obsLayerGroup;
 var observationsData = [];
 
-/* Finnish time from UTC */
-function getFinnishTime() {
-  var now = new Date();
-  var m = now.getUTCMonth(), d = now.getUTCDate(), dow = now.getUTCDay();
-  var off = 2;
-  if (m > 2 && m < 9) { off = 3; }
-  else if (m === 2) { var ls = 31 - ((5 + 31 - (dow || 7)) % 7); if (d >= ls) off = 3; }
-  else if (m === 9) { var ls2 = 31 - ((5 + 31 - (dow || 7)) % 7); if (d < ls2) off = 3; }
-  return new Date(now.getTime() + off * 3600000);
-}
-
+/* Finnish time — uses Intl timezone for automatic DST */
 function pad2(n) { return n < 10 ? '0' + n : '' + n; }
 
+function getFinnishParts() {
+  var now = new Date();
+  var hh = Number(new Intl.DateTimeFormat('en', {timeZone:'Europe/Helsinki', hour:'numeric', hour12:false}).format(now));
+  var mm = Number(new Intl.DateTimeFormat('en', {timeZone:'Europe/Helsinki', minute:'numeric'}).format(now));
+  var dd = Number(new Intl.DateTimeFormat('en', {timeZone:'Europe/Helsinki', day:'numeric'}).format(now));
+  var mo = Number(new Intl.DateTimeFormat('en', {timeZone:'Europe/Helsinki', month:'numeric'}).format(now)) - 1;
+  var yy = Number(new Intl.DateTimeFormat('en', {timeZone:'Europe/Helsinki', year:'numeric'}).format(now));
+  var dateStr = new Intl.DateTimeFormat('en-US', {timeZone:'Europe/Helsinki', year:'numeric', month:'2-digit', day:'2-digit'}).format(now);
+  var wd = new Date(dateStr).getDay();
+  return {hh:hh, mm:mm, dd:dd, mo:mo, yy:yy, wd:wd};
+}
+
 function updateClock() {
-  var fi = getFinnishTime();
-  document.getElementById('clock').textContent = pad2(fi.getUTCHours()) + ':' + pad2(fi.getUTCMinutes());
+  var p = getFinnishParts();
+  document.getElementById('clock').textContent = pad2(p.hh) + ':' + pad2(p.mm);
+
   var days = ['sunnuntaina','maanantaina','tiistaina','keskiviikkona','torstaina','perjantaina','lauantaina'];
   var months = ['tammikuuta','helmikuuta','maaliskuuta','huhtikuuta','toukokuuta','kes\u00e4kuuta',
     'hein\u00e4kuuta','elokuuta','syyskuuta','lokakuuta','marraskuuta','joulukuuta'];
-  document.getElementById('date-display').textContent = days[fi.getUTCDay()] + ' ' + fi.getUTCDate() + '. ' + months[fi.getUTCMonth()] + ' ' + fi.getUTCFullYear();
+  document.getElementById('date-display').textContent = days[p.wd] + ' ' + p.dd + '. ' + months[p.mo] + ' ' + p.yy;
 }
 setInterval(updateClock, 1000);
 updateClock();
@@ -376,8 +379,8 @@ function refreshAll() {
       showError('Havaintodatan haku ep\u00e4onnistui');
     }
 
-    var fi = getFinnishTime();
-    var timeStr = pad2(fi.getUTCHours()) + ':' + pad2(fi.getUTCMinutes());
+    var p = getFinnishParts();
+    var timeStr = pad2(p.hh) + ':' + pad2(p.mm);
     var statusText = 'P\u00e4ivitetty ' + timeStr;
     if (obsOk) {
       statusText += ' | ' + observationsData.length + ' asemaa';
