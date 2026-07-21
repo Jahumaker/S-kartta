@@ -272,20 +272,21 @@ var geoStyle = { color:'#4fc3f7', weight:2, opacity:0.7, fillColor:'#1a237e', fi
 function initMaps() {
   /* Main observation map with tiles */
   map1 = L.map('map1', mapOpts);
-  map1.setView([65.5, 26], 4);
+  map1.setView([64.5, 26], 5);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map1);
   L.geoJSON(FINLAND_GEOJSON, { style: geoStyle }).addTo(map1);
   obsLayerGroup = L.layerGroup().addTo(map1);
 
   /* Forecast temp map — dark background, no tiles */
   map2 = L.map('map2', mapOpts);
-  map2.setView([65.5, 26], 4);
+  map2.setView([64.5, 26], 5);
   L.geoJSON(FINLAND_GEOJSON, { style: { color:'#4fc3f7', weight:2, opacity:0.6, fillColor:'#0d1b2a', fillOpacity:0.6, dashArray:'6 3' } }).addTo(map2);
   fcTempGroup = L.layerGroup().addTo(map2);
 
   /* Forecast rain map — dark background, no tiles */
   map3 = L.map('map3', mapOpts);
-  map3.setView([65.5, 26], 4);
+  map3.setView([64.5, 26], 6);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map3);
   L.geoJSON(FINLAND_GEOJSON, { style: { color:'#4fc3f7', weight:2, opacity:0.6, fillColor:'#0d1b2a', fillOpacity:0.6, dashArray:'6 3' } }).addTo(map3);
   fcRainGroup = L.layerGroup().addTo(map3);
 
