@@ -169,11 +169,11 @@ html, body { width:100vw; height:100vh; overflow:hidden; font-family:'Segoe UI',
   <div id="summary-strip">
     <div class="summary-box">
       <div class="summary-icon">&#x2744;&#xFE0F;</div>
-      <div><div class="summary-value" id="s-min" style="color:#3b82f6">&ndash;</div><div class="summary-label">Kylmin</div></div>
+      <div><div class="summary-value" id="s-min" style="color:#3b82f6">&ndash;</div><div class="summary-label">Kylmin</div><div class="summary-detail" id="s-min-name"></div></div>
     </div>
     <div class="summary-box">
       <div class="summary-icon">&#x1F321;&#xFE0F;</div>
-      <div><div class="summary-value" id="s-max" style="color:#ef4444">&ndash;</div><div class="summary-label">L&auml;mpimin</div></div>
+      <div><div class="summary-value" id="s-max" style="color:#ef4444">&ndash;</div><div class="summary-label">L&auml;mpimin</div><div class="summary-detail" id="s-max-name"></div></div>
     </div>
     <div class="summary-box">
       <div class="summary-icon">&#x1F4CA;</div>
@@ -181,7 +181,7 @@ html, body { width:100vw; height:100vh; overflow:hidden; font-family:'Segoe UI',
     </div>
     <div class="summary-box">
       <div class="summary-icon">&#x1F4A8;</div>
-      <div><div class="summary-value" id="s-wind" style="color:#06b6d4">&ndash;</div><div class="summary-label">Max tuuli</div></div>
+      <div><div class="summary-value" id="s-wind" style="color:#06b6d4">&ndash;</div><div class="summary-label">Max tuuli</div><div class="summary-detail" id="s-wind-name"></div></div>
     </div>
   </div>
 </div>
@@ -473,20 +473,34 @@ function renderSummary() {
     if (observationsData[i].windspeedms != null) winds.push(observationsData[i].windspeedms);
   }
   if (!temps.length) return;
-  var minT = temps[0], maxT = temps[0], sumT = 0;
-  for (var t = 0; t < temps.length; t++) {
-    if (temps[t] < minT) minT = temps[t];
-    if (temps[t] > maxT) maxT = temps[t];
-    sumT += temps[t];
+  var minT = observationsData[0].temperature, maxT = minT, sumT = 0;
+  var minName = observationsData[0].name, maxName = minName;
+  for (var t = 0; t < observationsData.length; t++) {
+    var st = observationsData[t];
+    if (st.temperature == null) continue;
+    if (st.temperature < minT) { minT = st.temperature; minName = st.name; }
+    if (st.temperature > maxT) { maxT = st.temperature; maxName = st.name; }
+    sumT += st.temperature;
   }
   var avgT = sumT / temps.length;
-  var maxW = 0;
-  for (var w = 0; w < winds.length; w++) { if (winds[w] > maxW) maxW = winds[w]; }
+  var maxW = 0, maxWName = '';
+  for (var w = 0; w < observationsData.length; w++) {
+    if (observationsData[w].windspeedms != null && observationsData[w].windspeedms > maxW) {
+      maxW = observationsData[w].windspeedms;
+      maxWName = observationsData[w].name;
+    }
+  }
+
+  /* Shorten station name: take first word (city) */
+  function shortName(n) { return n ? n.split(' ')[0] : ''; }
 
   document.getElementById('s-min').textContent = minT.toFixed(1) + '\u00b0';
   document.getElementById('s-max').textContent = maxT.toFixed(1) + '\u00b0';
   document.getElementById('s-avg').textContent = avgT.toFixed(1) + '\u00b0';
   document.getElementById('s-wind').textContent = maxW.toFixed(1) + ' m/s';
+  document.getElementById('s-min-name').textContent = shortName(minName);
+  document.getElementById('s-max-name').textContent = shortName(maxName);
+  document.getElementById('s-wind-name').textContent = shortName(maxWName);
 }
 
 /* Error */
