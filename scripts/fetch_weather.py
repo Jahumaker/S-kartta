@@ -58,55 +58,67 @@ def find_city(lat, lon):
 
 def fetch_observations():
     now = datetime.now(timezone.utc)
-    start = now - timedelta(hours=2)
+    start = now - timedelta(hours=3)
 
     url = (
         "https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0"
         "&request=getFeature&storedquery_id=fmi::observations::weather::multipointcoverage"
         "&bbox=19,59,32,71&parameters=temperature,windspeedms"
-        "&timestep=60"
-        f"&starttime={start.strftime('%Y-%m-%dT%H:%M:%SZ')}"
-        f"&endtime={now.strftime('%Y-%m-%dT%H:%M:%SZ')}"
+        "&timestep=10"
+        f"&starttime={start.strftime('%Y-%m-%dT%H:%M:00Z')}"
+        f"&endtime={now.strftime('%Y-%m-%dT%H:%M:00Z')}"
     )
 
-    resp = requests.get(url, timeout=30)
+    resp = requests.get(url, timeout=60)
     resp.raise_for_status()
-    root = ET.fromstring(resp.text)
+    root = ET.fromstring(resp.content)
 
-    station_names = []
-    for loc in root.iter('{http://xml.fmi.fi/namespace/om/atmosphericfeatures/1.1}Location'):
-        name = ''
-        for gml_name in loc.findall('{http://www.opengis.net/gml/3.2}name'):
-            if gml_name.get('codeSpace') == 'http://xml.fmi.fi/namespace/locationcode/name':
-                name = gml_name.text or ''
-                break
-        station_names.append(name)
+    # Station names keyed by coordinates (from gml:Point elements; no index arithmetic)
+    ns_gml = '{http://www.opengis.net/gml/3.2}'
+    name_by_pos = {}
+    for pt in root.iter(ns_gml + 'Point'):
+        nm = pt.find(ns_gml + 'name')
+        pos = pt.find(ns_gml + 'pos')
+        if nm is not None and pos is not None and pos.text:
+            p = pos.text.split()
+            name_by_pos[(round(float(p[0]), 4), round(float(p[1]), 4))] = (nm.text or '').strip()
 
     pos_el = root.find('.//{http://www.opengis.net/gmlcov/1.0}positions')
-    positions = [l.strip() for l in pos_el.text.strip().split('\n') if l.strip()] if pos_el is not None else []
+    positions = [l.strip() for l in pos_el.text.strip().split('\n') if l.strip()] if pos_el is not None and pos_el.text else []
+    val_el = root.find('.//' + ns_gml + 'doubleOrNilReasonTupleList')
+    values = [l.strip() for l in val_el.text.strip().split('\n') if l.strip()] if val_el is not None and val_el.text else []
 
-    val_el = root.find('.//{http://www.opengis.net/gml/3.2}doubleOrNilReasonTupleList')
-    values = [l.strip() for l in val_el.text.strip().split('\n') if l.strip()] if val_el is not None else []
+    def num(v):
+        try:
+            f = float(v)
+            return None if math.isnan(f) else f
+        except (ValueError, TypeError):
+            return None
 
-    num_stations = len(station_names)
-    time_steps = round(len(positions) / num_stations) if num_stations > 0 else 1
-
+    # Per station: latest non-missing temperature and wind separately
     station_map = {}
-    for k in range(len(positions)):
+    for k in range(min(len(positions), len(values))):
         parts = positions[k].split()
+        if len(parts) < 3:
+            continue
         lat, lon, ts = float(parts[0]), float(parts[1]), int(parts[2])
-        vals = values[k].split() if k < len(values) else []
-        temp = float(vals[0]) if len(vals) > 0 and vals[0] != 'NaN' else None
-        wind = float(vals[1]) if len(vals) > 1 and vals[1] != 'NaN' else None
-        st_idx = k // time_steps
-        name = station_names[st_idx] if st_idx < len(station_names) else ''
-        key = name or f"{lat},{lon}"
-        if key not in station_map or ts > station_map[key]['ts']:
-            station_map[key] = {'name': name, 'lat': lat, 'lon': lon, 'ts': ts, 'temperature': temp, 'windspeedms': wind}
+        vals = values[k].split()
+        temp = num(vals[0]) if len(vals) > 0 else None
+        wind = num(vals[1]) if len(vals) > 1 else None
+        key = (round(lat, 4), round(lon, 4))
+        s = station_map.setdefault(key, {'name': name_by_pos.get(key, ''), 'lat': lat, 'lon': lon,
+                                         'temperature': None, 'windspeedms': None, 'tts': -1, 'wts': -1})
+        if temp is not None and ts > s['tts']:
+            s['temperature'] = temp; s['tts'] = ts
+        if wind is not None and ts > s['wts']:
+            s['windspeedms'] = wind; s['wts'] = ts
 
-    stations = [s for s in station_map.values() if s['temperature'] is not None]
-    for s in stations:
-        del s['ts']
+    stations = []
+    for s in station_map.values():
+        if s['temperature'] is None:
+            continue
+        del s['tts']; del s['wts']
+        stations.append(s)
     return stations
 
 
@@ -204,12 +216,41 @@ def fetch_forecasts():
 def main():
     now = datetime.now(timezone.utc)
 
+    import time
+    try:
+        with open('data.json', encoding='utf-8') as f:
+            prev = json.load(f)
+    except Exception:
+        prev = {}
+
+    MIN_STATIONS = 100
     print("Fetching observations...")
-    stations = fetch_observations()
-    print(f"  {len(stations)} stations")
+    stations = []
+    for attempt in range(3):
+        try:
+            stations = fetch_observations()
+        except Exception as e:
+            print(f"  attempt {attempt + 1} failed: {e}")
+            stations = []
+        print(f"  attempt {attempt + 1}: {len(stations)} stations")
+        if len(stations) >= MIN_STATIONS:
+            break
+        time.sleep(30)
+    prev_st = prev.get('stations') or []
+    if len(stations) < MIN_STATIONS and len(prev_st) > len(stations):
+        print(f"  WARNING: only {len(stations)} stations, keeping previous {len(prev_st)}")
+        stations = prev_st
 
     print("Fetching forecasts...")
-    temp_fc, precip_fc, fc_time = fetch_forecasts()
+    try:
+        temp_fc, precip_fc, fc_time = fetch_forecasts()
+    except Exception as e:
+        print(f"  forecast fetch failed: {e}")
+        temp_fc, precip_fc, fc_time = [], [], None
+    prev_fc = prev.get('forecast') or {}
+    if len(temp_fc) < 10 and prev_fc.get('temperature'):
+        print("  WARNING: forecast incomplete, keeping previous")
+        temp_fc, precip_fc, fc_time = prev_fc.get('temperature', []), prev_fc.get('precipitation', []), prev_fc.get('time')
     print(f"  {len(temp_fc)} temp forecasts, {len(precip_fc)} precip forecasts")
 
     result = {
